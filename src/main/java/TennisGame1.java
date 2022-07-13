@@ -95,7 +95,7 @@ class Player {
 
     public Player(String name) {
         this.name = name;
-        resetScore();
+        restoreScore();
     }
 
     public String getName() {
@@ -106,7 +106,7 @@ class Player {
         return score;
     }
 
-    public void resetScore() {
+    public void restoreScore() {
         this.score = 0;
     }
 
