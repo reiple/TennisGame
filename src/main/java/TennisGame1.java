@@ -28,6 +28,10 @@ public class TennisGame1 implements TennisGame {
         return firstPlayer.getScore() == secondPlayer.getScore() ? true : false;
     }
 
+    private boolean isLoveScore(ScoreType scoreType) {
+        return scoreType.toString().equals(ScoreType.DeuceScoreGroup.toString());
+    }
+
     public String getLiteralScore() {
         String score = "";
 
@@ -36,12 +40,10 @@ public class TennisGame1 implements TennisGame {
         ScoreType firstPlayerScoreType = covertToScoreType(firstPlayer.getScore());
         ScoreType secondPlayerScoreType = covertToScoreType(secondPlayer.getScore());
 
-
-
         if (isDeuce(firstPlayer, secondPlayer)) {
             // Extract method
             score = processDeuce(firstPlayerScoreType);
-        } else if (firstPlayerScoreType == ScoreType.DeuceScoreGroup || secondPlayerScoreType == ScoreType.DeuceScoreGroup) {
+        } else if (isLoveScore(firstPlayerScoreType) || isLoveScore(secondPlayerScoreType)) {
             // Extract method
             score = processLoveScore(player1Score, player2Score, score);
         } else {
@@ -146,6 +148,9 @@ class ScoreType {
 
     @Override
     public String toString() {
+        if(score >= 4) {
+            return scoreGroups[4];
+        }
         return scoreGroups[score];
     }
 
