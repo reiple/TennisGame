@@ -26,7 +26,7 @@ public class TennisGame1 implements TennisGame {
     }
 
     private boolean isDeuce(Player firstPlayer, Player secondPlayer) {
-        return firstPlayer.getScore() == secondPlayer.getScore() ? true : false;
+        return firstPlayer.getScore() == secondPlayer.getScore();
     }
 
     private boolean isLoveScore(ScoreType scoreType) {
