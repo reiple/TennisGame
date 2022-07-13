@@ -1,6 +1,8 @@
 
 public interface TennisGame {
-    void wonPoint(String playerName);
+
+	void wonPointFirstPlayer();
+	void wonPointSecondPlayer();
     String getLiteralScore();
 	boolean isEnd();
 }
