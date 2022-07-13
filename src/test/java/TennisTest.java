@@ -11,13 +11,13 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class TennisTest {
 
-    private int player1Score;
-    private int player2Score;
+    private int firstPlayerScore;
+    private int secondPlayerScore;
     private String expectedScore;
 
-    public TennisTest(int player1Score, int player2Score, String expectedScore) {
-        this.player1Score = player1Score;
-        this.player2Score = player2Score;
+    public TennisTest(int firstPlayerScore, int secondPlayerScore, String expectedScore) {
+        this.firstPlayerScore = firstPlayerScore;
+        this.secondPlayerScore = secondPlayerScore;
         this.expectedScore = expectedScore;
     }
     
@@ -66,12 +66,12 @@ public class TennisTest {
     }
 
     public void checkAllScores(TennisGame game) {
-        int highestScore = Math.max(this.player1Score, this.player2Score);
+        int highestScore = Math.max(this.firstPlayerScore, this.secondPlayerScore);
         for (int i = 0; i < highestScore; i++) {
-            if (i < this.player1Score)
-                game.wonPoint("player1");
-            if (i < this.player2Score)
-                game.wonPoint("player2");
+            if (i < this.firstPlayerScore)
+                game.wonPointFirstPlayer();
+            if (i < this.secondPlayerScore)
+                game.wonPointSecondPlayer();
         }
         assertEquals(this.expectedScore, game.getLiteralScore());
     }
