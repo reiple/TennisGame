@@ -16,6 +16,7 @@ public class TennisGame1 implements TennisGame {
     public void wonPointFirstPlayer() {
         firstPlayer.wonPoint();
     }
+
     public void wonPointSecondPlayer() {
         secondPlayer.wonPoint();
     }
@@ -33,25 +34,21 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getLiteralScore() {
-        String score = "";
 
-        int player1Score = firstPlayer.getScore();
-        int player2Score = secondPlayer.getScore();
         ScoreType firstPlayerScoreType = covertToScoreType(firstPlayer.getScore());
         ScoreType secondPlayerScoreType = covertToScoreType(secondPlayer.getScore());
 
         if (isDeuce(firstPlayer, secondPlayer)) {
             // Extract method
-            score = processDeuce(firstPlayerScoreType);
+            return processDeuce(firstPlayerScoreType);
         } else if (isLoveScore(firstPlayerScoreType) || isLoveScore(secondPlayerScoreType)) {
             // Extract method
-            score = processLoveScore(player1Score, player2Score, score);
-        } else {
-            // Refactoring: Switch Statements문 제거. score에 따른 switching => Replace Type Code with SubClasses
-            score += firstPlayerScoreType.toString() + "-" + secondPlayerScoreType.toString();
+            return processLoveScore(firstPlayer.getScore(), secondPlayer.getScore());
         }
+        // Refactoring: Switch Statements문 제거. score에 따른 switching => Replace Type Code with SubClasses
 
-        return score;
+        return firstPlayerScoreType.toString() + "-" + secondPlayerScoreType.toString();
+
     }
 
     public String processDeuce(ScoreType scoreType) {
@@ -65,10 +62,10 @@ public class TennisGame1 implements TennisGame {
         }
     }
 
-    public String processLoveScore(int p1, int p2, String score) {
+    public String processLoveScore(int firstPlayerScore, int secondPlayerScore) {
 
         // Refactoring: 임시 변수(tmpScore) 제거
-        int minusResult = p1 - p2;
+        int minusResult = firstPlayerScore - secondPlayerScore;
 
         if (minusResult == 1) return "Advantage player1";
         else if (minusResult == -1) return "Advantage player2";
@@ -76,10 +73,10 @@ public class TennisGame1 implements TennisGame {
             isEnd = true;
             return "Win for player1";
 
-        } else {
-            isEnd = true;
-            return "Win for player2";
         }
+
+        isEnd = true;
+        return "Win for player2";
     }
 
     public boolean isEnd() {
@@ -87,9 +84,11 @@ public class TennisGame1 implements TennisGame {
     }
 }
 
-// 목적: TennisGame 클래스 내에 서로 다른 종류의 변수(player의 score)가 있으므로,
-//      별도 클래스를 생성하고 변수 일부를 옮겨서 역할을 나눈다
-// Refactoring 기법: Extract Class
+/**
+ * 목적:
+ * TennisGame 클래스 내에 서로 다른 종류의 변수(player의 score)가 있으므로, 별도 클래스를 생성하고 변수를 옮겨 역할을 나눔.
+ * Refactoring 기법: Extract Class
+ */
 class Player {
     private String name;
     private int score;
@@ -117,21 +116,14 @@ class Player {
 
 }
 
-//// Refactoring: Replace Type Code with SubClasses
-//class ScoreType {
-//    public static final ScoreType LoveScoreType = new ScoreType(0);
-//    public static final ScoreType FitTeenScoreType = new ScoreType(1);
-//    public static final ScoreType ThirtyScoreType = new ScoreType(2);
-//    public static final ScoreType ForScoreType = new ScoreType(3);
-//    public static final ScoreType DeuceScoreType = new ScoreType(4);
-//
-//    int score;
-//
-//    public ScoreType(int score) {
-//        this.score = score;
-//    }
-//}
-
+/**
+ * 목적:
+ * scoretype이 다른 값이 함부로 쓰이지 않도록 막는다.
+ * scoretype을 단순히 숫자가 아닌 이름을 부여함으로 인해 가독성을 높인다.
+ * scoretype에 String배열을 사용해 기존에 사용하던 swich문을 없앤다.
+ * 적용 Refactoring 기법: Replace Type Code with SubClasses
+ * @see TennisGame1.getLiteralScore(), TennisGame1.processDeuce()
+ */
 class ScoreType {
     public static final String[] scoreGroups = {"Love", "Fifteen", "Thirty", "Forty", "Deuce"};
     public static final ScoreType LoveScoreGroup = new ScoreType(0);
@@ -158,18 +150,3 @@ class ScoreType {
         return score;
     }
 }
-
-
-//enum ScoreNum { // 상수를 enum으로 변경
-//    Love(0), Fifteen(1), Thirty(2), Forty(3), Game(4);
-//
-//    private final int value;
-//
-//    private ScoreNum(int value) {
-//        this.value = value;
-//    }
-//
-//    public int getValue() {
-//        return value;
-//    }
-//}
